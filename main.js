@@ -26,27 +26,6 @@ function getAllPossibleMovesFromPoint(point)
     return possibleMoves;
 }
 
-function levelOrderForEach(node, callback)
-{
-    if( !callback )
-        throw new Error("No callback was provided");
-
-    let queue = [node];
-    let visitedNodes = [node];
-
-    while( queue.length > 0 ) {
-        node = queue.shift();
-
-        callback(node);
-        visitedNodes.push(node);
-
-        for( let edge of node.edges ) {
-            if( visitedNodes.filter(visited => visited == edge).length == 0 )
-                queue.push(edge);
-        }
-    }        
-}
-
 function knightMoves(start, end)
 {
     const startCoord = new Coordinate(...start);
@@ -64,15 +43,8 @@ function knightMoves(start, end)
         const possibleMoves = getAllPossibleMovesFromPoint(curr.coord);
 
         for( let move of possibleMoves ) {
-            let alreadyInPath = false;
-
             // Make sure this node isn't already in the path, this avoids closed paths leading to infinit loops
-            levelOrderForEach(curr, node => {
-                if( node.coord.isEqualTo(move) )
-                    alreadyInPath = true;
-            })
-
-            if( !alreadyInPath ) {
+            if( curr.isMovePossible(move) ) {
                 let node = null;
 
                 for( let square of boardNodes ) {
@@ -102,10 +74,7 @@ function knightMoves(start, end)
     }
 
     // Found shortest path, now remove all nodes who are not directly connected to end node
-    for( let i = boardNodes.length - 2; i >= 0; i-- ) {
-        if( edges.length == 0 )
-            break;
-
+    for( let i = boardNodes.length - 2; i > 0; i-- ) {
         const node = boardNodes[i];
 
         if( edges.includes(node) )
