@@ -1,13 +1,5 @@
 import Coordinate from "./coordinate.js";
-
-class Node 
-{
-    constructor(coord)
-    {
-        this.coord = coord;
-        this.edges = [];
-    }
-}
+import Node from "./node.js"
 
 const knightDisplacements = [
     new Coordinate(1, 2),
@@ -129,26 +121,3 @@ function knightMoves(start, end)
 console.log("From (0, 0) to (3, 3): ", knightMoves([0, 0], [3, 3]));
 console.log("From (3, 3) to (0, 0): ", knightMoves([3, 3], [0, 0]));
 console.log("From (0, 0) to (7, 7): ", knightMoves([0, 0], [7, 7]));
-
-/*
-const prettyPrint = (node, prefix = '', type = 0) =>
-{
-    if (node === null) {
-        return;
-    }
-
-    if (node.right !== null) {
-        prettyPrint(node.right, `${prefix}${type == 2 ? '│   '  : type == 1 ? '    ' : ''}`, 1);
-    }
-
-    let coord = node.data;
-
-    console.log(`${prefix}${type == 2 ? '└── ' : type == 1 ? '┌── ' : ''}(${coord.x}, ${coord.y})`);
-
-    if (node.left !== null) {
-        prettyPrint(node.left, `${prefix}${type == 2 ? '    ' : type ==  1 ? '│   ' : ''}`, 2);
-    }
-};
-
-let tree = new Tree([new Coordinate(1, 0), new Coordinate(0, 0), new Coordinate(0, 1)]);
-prettyPrint(tree.root);*/

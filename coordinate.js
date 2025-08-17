@@ -20,19 +20,4 @@ export default class Coordinate
     {
         return new Coordinate(this.x + point.x, this.y + point.y);
     }
-
-    distanceFromOrigin()
-    {
-        return Math.sqrt(this.x * this.x + this.y * this.y);
-    }
-
-    distanceFromPoint(point)
-    {
-        const diff = {
-            x: this.x - point.x,
-            y: this.y - point.y
-        };
-
-        return Math.sqrt(diff.x * diff.x + diff.y * diff.y);
-    }
 }
