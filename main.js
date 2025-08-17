@@ -57,7 +57,6 @@ function levelOrderForEach(node, callback)
 
 function knightMoves(start, end)
 {
-    // Build graph
     const startCoord = new Coordinate(...start);
     const endCoord = new Coordinate(...end);
 
@@ -65,8 +64,10 @@ function knightMoves(start, end)
     let boardNodes = [root];
 
     let q = [root];
+    let foundEnd = false;
+    let edges = [];
 
-    while( q.length > 0 ) {
+    while( q.length > 0 && !foundEnd ) {
         const curr = q.shift();
         const possibleMoves = getAllPossibleMovesFromPoint(curr.coord);
 
@@ -97,19 +98,37 @@ function knightMoves(start, end)
                 curr.edges.push(node);
                 node.edges.push(curr);
 
-                if( !node.coord.isEqualTo(endCoord) )
+                if( node.coord.isEqualTo(endCoord) ) {
+                    foundEnd = true;
+                    edges = node.edges;
+                    break;
+                }
+                else
                     q.push(node);
             }
         }
     }
 
-    // Search graph
+    // Found shortest path, now remove all nodes who are not directly connected to end node
+    for( let i = boardNodes.length - 2; i >= 0; i-- ) {
+        if( edges.length == 0 )
+            break;
 
-    return boardNodes;
+        const node = boardNodes[i];
+
+        if( edges.includes(node) )
+            edges = node.edges;
+        else
+            boardNodes.splice(i, 1);
+    }
+
+    return Array.from(boardNodes, node => [node.coord.x, node.coord.y]);
 }
 
-let boardNodes = knightMoves([0,0], [3,3]);
-boardNodes.forEach(node => console.log(node.coord, node.edges.length));
+
+console.log("From (0, 0) to (3, 3): ", knightMoves([0, 0], [3, 3]));
+console.log("From (3, 3) to (0, 0): ", knightMoves([3, 3], [0, 0]));
+console.log("From (0, 0) to (7, 7): ", knightMoves([0, 0], [7, 7]));
 
 /*
 const prettyPrint = (node, prefix = '', type = 0) =>
