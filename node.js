@@ -8,7 +8,7 @@ export default class Node
         this.edges = [];
     }
 
-    isMovePossible(move)
+    willPathLoopFromMove(move)
     {
         let queue = [this];
         let visitedNodes = [];
@@ -17,7 +17,7 @@ export default class Node
             let node = queue.shift();
 
             if( node.coord.isEqualTo(move) )
-                return false;
+                return true;
 
             visitedNodes.push(node);
 
@@ -27,6 +27,6 @@ export default class Node
             }
         }
         
-        return true;
+        return false;
     }
 }

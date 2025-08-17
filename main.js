@@ -12,20 +12,6 @@ const knightDisplacements = [
     new Coordinate(-2, -1)
 ];
 
-function getAllPossibleMovesFromPoint(point)
-{
-    let possibleMoves = [];
-
-    knightDisplacements.forEach(disp => {
-        let pos = point.shift(disp);
-
-        if( pos.isInGrid() )
-            possibleMoves.push(pos);
-    });
-
-    return possibleMoves;
-}
-
 function knightMoves(start, end)
 {
     const startCoord = new Coordinate(...start);
@@ -40,14 +26,16 @@ function knightMoves(start, end)
 
     while( q.length > 0 && !foundEnd ) {
         const curr = q.shift();
-        const possibleMoves = getAllPossibleMovesFromPoint(curr.coord);
+        const possibleDisplacements = knightDisplacements.filter(disp => curr.coord.shift(disp).isInGrid());
 
-        for( let move of possibleMoves ) {
-            // Make sure this node isn't already in the path, this avoids closed paths leading to infinit loops
-            if( curr.isMovePossible(move) ) {
+        for( const disp of possibleDisplacements ) {
+            const move = curr.coord.shift(disp);
+
+            // Anticipate any looping and prevent it
+            if( !curr.willPathLoopFromMove(move) ) {
                 let node = null;
 
-                for( let square of boardNodes ) {
+                for( const square of boardNodes ) {
                     if( square.coord.isEqualTo(move) ) {
                         node = square;
                         break;
@@ -66,8 +54,7 @@ function knightMoves(start, end)
                     foundEnd = true;
                     edges = node.edges;
                     break;
-                }
-                else
+                } else
                     q.push(node);
             }
         }
